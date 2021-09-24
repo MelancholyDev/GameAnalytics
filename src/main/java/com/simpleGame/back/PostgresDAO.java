@@ -1,19 +1,18 @@
 package com.simpleGame.back;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 @Component
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("analytics")
 public class PostgresDAO {
 
     private JdbcTemplate jdbcTemplate;
@@ -21,16 +20,15 @@ public class PostgresDAO {
     void setJdb(DataSource dataSource) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
-        String sqlRecords = "CREATE TABLE IF NOT EXISTS records(id text not null,score int not null,primary key(id))";
+        String sqlRecords = "CREATE TABLE IF NOT EXISTS deaths(id serial primary key,level text,x numeric,y numeric,z numeric)";
         jdbcTemplate.execute(sqlRecords);
     }
-    @GetMapping("/test")
-    public ResponseEntity PostgresDAO() {
-        String sql="select id from records";
-        List<String> list=jdbcTemplate.query(sql,(rs,row)->rs.getString("id"));
-        String ans="";
-        for(int i=0;i<list.size();i++)
-            ans+=list.get(i)+" ";
-        return ResponseEntity.ok().body(ans);
+    @PostMapping("/death")
+    public ResponseEntity PostgresDAO(DeathRecord record) {
+        System.out.println(record.getLevel()+" "+record.getX()+" "+record.getY()+" "+record.getZ());
+        String sql="insert into deaths(level,x,y,z) VALUES(?,?,?,?)";
+        jdbcTemplate.update(sql,record.getLevel(),record.getX(),record.getY(),record.getZ());
+        return new ResponseEntity(HttpStatus.OK);
     }
+
 }

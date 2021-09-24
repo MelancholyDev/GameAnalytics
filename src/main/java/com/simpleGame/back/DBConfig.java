@@ -9,11 +9,9 @@ import java.io.IOException;
 public class DBConfig {
     @Bean
     DriverManagerDataSource dataSource() {
-        return new DriverManagerDataSource("jdbc:postgresql://localhost:5432/wtll",
+        return new DriverManagerDataSource("jdbc:postgresql://localhost:5432/analytics",
                 "postgres",
                "Morrigan181");
-
-
     }
 
 

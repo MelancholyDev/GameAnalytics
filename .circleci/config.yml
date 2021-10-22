@@ -1,24 +1,21 @@
 version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build:
-    # Remove if parallelism is not desired
-    parallelism: 2
     environment:
-      # Configure the JVM and Gradle to avoid OOM errors
       _JAVA_OPTIONS: "-Xmx3g"
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
     docker: # run the steps with Docker
       - image: circleci/openjdk:11.0.3-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
         auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+          username: melancholy
+          password: Morrigan181  # context / project UI env-var reference
       - image: circleci/postgres:12-alpine
         auth:
-          username: mydockerhub-user
+          username: melancholy
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: circle_test
+          POSTGRES_DB: analytics
     steps: # a collection of executable commands
       - checkout # check out source code to working directory
       # Read about caching dependencies: https://circleci.com/docs/2.0/caching/

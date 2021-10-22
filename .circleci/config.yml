@@ -33,6 +33,11 @@ jobs: # a collection of steps
       - store_artifacts: # Upload test results for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: build/test-results/test
           when: always
+      -run:
+        name: SET JAVA_HOME
+        command: |
+          apt-get update;
+          apt-get install default-jdk -y
       - run:
           name: Assemble JAR
           command: |
